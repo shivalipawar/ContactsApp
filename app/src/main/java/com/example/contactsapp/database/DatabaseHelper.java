@@ -48,7 +48,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 new String[]{String.valueOf(id)}, null, null, null, null);
 
         if(cursor.getCount() == 1){
-            return updateNote(contact);
+            return updateContact(contact);
         }else{
             id = db.insert(ContactTable.TABLE_NAME, null, values);
             System.out.println("Insert successful");
@@ -127,7 +127,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return count;
     }
 
-    public int updateNote(Contact contact) {
+    public int updateContact(Contact contact) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();

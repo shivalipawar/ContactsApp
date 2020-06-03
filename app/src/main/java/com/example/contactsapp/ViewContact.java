@@ -67,7 +67,7 @@ public class ViewContact extends AppCompatActivity {
             Toast.makeText(this,"Please enter name and phone number",Toast.LENGTH_LONG).show();
         }else{
             Contact contact = new Contact(0, name.getText().toString(), phoneNumber.getText().toString());
-            updateNote(contact,position);
+            updateContact(contact,position);
             Toast.makeText(this,"Successfully updated contact",Toast.LENGTH_SHORT).show();
             System.out.println("Saving to Db");
             finish();
@@ -78,18 +78,13 @@ public class ViewContact extends AppCompatActivity {
      * Updating note in db and updating
      * item in the list by its position
      */
-    private void updateNote(Contact contact, int position) {
+    private void updateContact(Contact contact, int position) {
         Contact n  = contactList.get(position);
-        // updating note text
         n.setName(contact.getName());
         n.setNumber(contact.getNumber());
 
-        // updating note in db
-        db.updateNote(n);
+        db.updateContact(n);
 
-        // refreshing the list
-//        contactList.set(position, n);
         adapter.notifyItemChanged(position);
-
     }
 }

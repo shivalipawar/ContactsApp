@@ -72,9 +72,6 @@ public class AddContact extends AppCompatActivity {
         Contact n = db.getContact(id);
 
         if (n != null) {
-            // adding new note to array list at 0 position
-            contactList.add(n);
-
             // refreshing the list
             adapter.notifyDataSetChanged();
         }
