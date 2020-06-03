@@ -86,11 +86,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public List<Contact> getAllNotes() {
-        List<Contact> notes = new ArrayList<>();
+        List<Contact> contactList = new ArrayList<>();
 
         // Select All Query
         String selectQuery = "SELECT  * FROM " + ContactTable.TABLE_NAME + " ORDER BY " +
-                ContactTable.COLUMN_NAME + " ASC";
+                ContactTable.COLUMN_NAME + " ASC ";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -103,7 +103,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 contact.setName(cursor.getString(cursor.getColumnIndex(ContactTable.COLUMN_NAME)));
                 contact.setNumber(cursor.getString(cursor.getColumnIndex(ContactTable.COLUMN_PHONE)));
 
-                notes.add(contact);
+                contactList.add(contact);
             } while (cursor.moveToNext());
         }
 
@@ -111,7 +111,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
 
         // return notes list
-        return notes;
+        return contactList;
     }
 
     public int getNotesCount() {
@@ -137,5 +137,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // updating row
         return db.update(ContactTable.TABLE_NAME, values, ContactTable.COLUMN_ID + " = ?",
                 new String[]{String.valueOf(contact.getId())});
+    }
+
+    public void deleteContact(Contact contact) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(ContactTable.TABLE_NAME, ContactTable.COLUMN_ID + " = ?",
+                new String[]{String.valueOf(contact.getId())});
+        db.close();
     }
 }

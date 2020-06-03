@@ -35,7 +35,8 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Contact contact = mData.get(position);
-        holder.myTextView.setText(contact.getName());
+        holder.contactName.setText(contact.getName());
+        holder.contactNumber.setText(contact.getNumber());
     }
 
     // total number of rows
@@ -46,12 +47,13 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
 
     // stores and recycles views as they are scrolled off screen
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView myTextView;
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        TextView contactName, contactNumber;
 
         ViewHolder(View itemView) {
             super(itemView);
-            myTextView = itemView.findViewById(R.id.tvContactName);
+            contactName = itemView.findViewById(R.id.tvContactName);
+            contactNumber = itemView.findViewById(R.id.tvContactNumber);
             itemView.setOnClickListener(this);
         }
 
@@ -59,11 +61,12 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         public void onClick(View view) {
             if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
         }
+
     }
 
     // convenience method for getting data at click position
-    Contact getItem(int id) {
-        return mData.get(id);
+    String getItem(int id) {
+        return mData.get(id).getName();
     }
 
     // allows clicks events to be caught

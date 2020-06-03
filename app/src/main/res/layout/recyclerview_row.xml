@@ -9,10 +9,30 @@
     app:layout_constraintTop_toTopOf="parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-        <TextView
-            android:id="@+id/tvContactName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp" />
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="2dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="start"
+        app:srcCompat="@android:drawable/ic_menu_call" />
 
-    </LinearLayout>
+    <TextView
+        android:id="@+id/tvContactName"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="start"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tvContactNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="end"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/tvContactName" />
+
+
+</LinearLayout>
