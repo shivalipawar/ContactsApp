@@ -1,6 +1,7 @@
 package com.example.contactsapp;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.contactsapp.models.Contact;
 
 import static com.example.contactsapp.MainActivity.adapter;
+import static com.example.contactsapp.MainActivity.contactList;
 import static com.example.contactsapp.MainActivity.db;
 
 public class AddContact extends AppCompatActivity {
@@ -57,20 +59,18 @@ public class AddContact extends AppCompatActivity {
             createNote(contact);
             Toast.makeText(this,"Successfully added contact",Toast.LENGTH_SHORT).show();
             System.out.println("Saving to Db");
+            startActivity(new Intent(this, MainActivity.class));
             finish();
         }
     }
 
     private void createNote(Contact contact) {
-        // inserting note in db and getting
-        // newly inserted note id
         long id = db.insertContact(contact,db.getWritableDatabase());
 
-        // get the newly inserted note from db
         Contact n = db.getContact(id,db.getReadableDatabase());
 
         if (n != null) {
-            // refreshing the list
+            contactList.add( n);
             adapter.notifyDataSetChanged();
         }
     }

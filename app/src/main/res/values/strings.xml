@@ -1,4 +1,5 @@
 <resources>
-    <string name="app_name">ContactsApp</string>
+    <string name="app_name">Contacts</string>
     <string name="action_save">save</string>
+    <string name="hint_name">Name</string>
 </resources>

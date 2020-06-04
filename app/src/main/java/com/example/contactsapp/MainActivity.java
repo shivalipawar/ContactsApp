@@ -37,14 +37,12 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         contactList = new ArrayList<>();
         contactList.addAll(db.getAllContacts(db.getWritableDatabase()));
 
-        // set up the RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new MyRecyclerViewAdapter(this, contactList);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new MyDividerItemDecoration(this, LinearLayoutManager.VERTICAL, 16));
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
-
     }
 
     @Override
