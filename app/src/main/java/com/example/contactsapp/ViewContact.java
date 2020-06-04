@@ -3,6 +3,7 @@ package com.example.contactsapp;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -83,7 +84,7 @@ public class ViewContact extends AppCompatActivity {
         n.setName(contact.getName());
         n.setNumber(contact.getNumber());
 
-        db.updateContact(n);
+        db.updateContact(n,db.getWritableDatabase());
 
         adapter.notifyItemChanged(position);
     }

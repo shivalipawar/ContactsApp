@@ -1,5 +1,6 @@
 package com.example.contactsapp;
 
+import android.content.ContentValues;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -63,10 +64,10 @@ public class AddContact extends AppCompatActivity {
     private void createNote(Contact contact) {
         // inserting note in db and getting
         // newly inserted note id
-        long id = db.insertContact(contact);
+        long id = db.insertContact(contact,db.getWritableDatabase());
 
         // get the newly inserted note from db
-        Contact n = db.getContact(id);
+        Contact n = db.getContact(id,db.getReadableDatabase());
 
         if (n != null) {
             // refreshing the list

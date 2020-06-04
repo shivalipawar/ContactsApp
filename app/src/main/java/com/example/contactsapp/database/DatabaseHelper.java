@@ -28,26 +28,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + ContactTable.TABLE_NAME);
-
         onCreate(db);
     }
 
-    public long insertContact(Contact contact) {
-        // get writable database as we want to write data
-        SQLiteDatabase db = this.getWritableDatabase();
+    public long insertContact(Contact contact, SQLiteDatabase db) {
         long id = 0;
 
         ContentValues values = new ContentValues();
         values.put(ContactTable.COLUMN_NAME, contact.getName());
         values.put(ContactTable.COLUMN_PHONE, contact.getNumber());
 
-        Cursor cursor = db.query(ContactTable.TABLE_NAME,
-                new String[]{ContactTable.COLUMN_ID, ContactTable.COLUMN_NAME, ContactTable.COLUMN_PHONE},
-                ContactTable.COLUMN_ID + "=?",
-                new String[]{String.valueOf(id)}, null, null, null, null);
-
-        if(cursor.getCount() == 1){
-            return updateContact(contact);
+        if(selectQueryForId(db, id).getCount() == 1){
+            return updateContact(contact, db);
         }else{
             id = db.insert(ContactTable.TABLE_NAME, null, values);
             System.out.println("Insert successful");
@@ -58,43 +50,40 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return id;
     }
 
-    public Contact getContact(long id) {
-        // get readable database as we are not inserting anything
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        Cursor cursor = db.query(ContactTable.TABLE_NAME,
+    private Cursor selectQueryForId(SQLiteDatabase db, long id) {
+        return db.query(ContactTable.TABLE_NAME,
                 new String[]{ContactTable.COLUMN_ID, ContactTable.COLUMN_NAME, ContactTable.COLUMN_PHONE},
                 ContactTable.COLUMN_ID + "=?",
                 new String[]{String.valueOf(id)}, null, null, null, null);
+    }
+
+    public Contact getContact(long id, SQLiteDatabase db) {
+
+        Cursor cursor = selectQueryForId(db, id);
 
         System.out.println("Cursor is "+cursor.getCount());
 
         if (cursor != null)
             cursor.moveToFirst();
 
-        // prepare note object
         Contact contact = new Contact(
                 cursor.getInt(cursor.getColumnIndex(ContactTable.COLUMN_ID)),
                 cursor.getString(cursor.getColumnIndex(ContactTable.COLUMN_NAME)),
                 cursor.getString(cursor.getColumnIndex(ContactTable.COLUMN_PHONE)));
 
-        // close the db connection
         cursor.close();
 
         return contact;
     }
 
-    public List<Contact> getAllContacts() {
+    public List<Contact> getAllContacts(SQLiteDatabase db) {
         List<Contact> contactList = new ArrayList<>();
 
-        // Select All Query
         String selectQuery = "SELECT  * FROM " + ContactTable.TABLE_NAME + " ORDER BY " +
                 ContactTable.COLUMN_NAME + " ASC ";
 
-        SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
-        // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
                 Contact contact = new Contact();
@@ -106,40 +95,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
 
-        // close db connection
         db.close();
 
-        // return notes list
         return contactList;
     }
 
-    public int getContactsCount() {
-        String countQuery = "SELECT  * FROM " + ContactTable.TABLE_NAME;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(countQuery, null);
-
-        int count = cursor.getCount();
-        cursor.close();
-
-
-        // return count
-        return count;
-    }
-
-    public int updateContact(Contact contact) {
-        SQLiteDatabase db = this.getWritableDatabase();
-
+    public int updateContact(Contact contact, SQLiteDatabase db) {
         ContentValues values = new ContentValues();
         values.put(ContactTable.COLUMN_NAME, contact.getName());
         values.put(ContactTable.COLUMN_PHONE, contact.getNumber());
 
-        // updating row
         return db.update(ContactTable.TABLE_NAME, values, ContactTable.COLUMN_ID + " = ?",
                 new String[]{String.valueOf(contact.getId())});
     }
 
-    public void deleteContact(Contact contact) {
-        SQLiteDatabase db = this.getWritableDatabase();
+    public void deleteContact(Contact contact, SQLiteDatabase db) {
         db.delete(ContactTable.TABLE_NAME, ContactTable.COLUMN_ID + " = ?",
                 new String[]{String.valueOf(contact.getId())});
         db.close();

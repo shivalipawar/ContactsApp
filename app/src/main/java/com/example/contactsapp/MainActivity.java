@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         db = new DatabaseHelper(this);
 
         contactList = new ArrayList<>();
-        contactList.addAll(db.getAllContacts());
+        contactList.addAll(db.getAllContacts(db.getWritableDatabase()));
 
         // set up the RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -93,13 +93,10 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
     }
 
     private void deleteNote(int position) {
-        // deleting the note from db
-        db.deleteContact(contactList.get(position));
+        db.deleteContact(contactList.get(position),db.getWritableDatabase());
 
-        // removing the note from the list
         contactList.remove(position);
         adapter.notifyItemRemoved(position);
-
     }
 
 }
