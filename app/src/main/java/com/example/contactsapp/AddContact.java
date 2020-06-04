@@ -1,7 +1,6 @@
 package com.example.contactsapp;
 
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -10,11 +9,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.contactsapp.database.ContactTable;
 import com.example.contactsapp.models.Contact;
 
 import static com.example.contactsapp.MainActivity.adapter;
-import static com.example.contactsapp.MainActivity.contactList;
 import static com.example.contactsapp.MainActivity.db;
 
 public class AddContact extends AppCompatActivity {
@@ -66,7 +63,7 @@ public class AddContact extends AppCompatActivity {
     private void createNote(Contact contact) {
         // inserting note in db and getting
         // newly inserted note id
-        long id = db.insertNote(contact);
+        long id = db.insertContact(contact);
 
         // get the newly inserted note from db
         Contact n = db.getContact(id);

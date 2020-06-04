@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         db = new DatabaseHelper(this);
 
         contactList = new ArrayList<>();
-        contactList.addAll(db.getAllNotes());
+        contactList.addAll(db.getAllContacts());
 
         // set up the RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

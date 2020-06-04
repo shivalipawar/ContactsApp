@@ -29,11 +29,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + ContactTable.TABLE_NAME);
 
-        // Create tables again
         onCreate(db);
     }
 
-    public long insertNote(Contact contact) {
+    public long insertContact(Contact contact) {
         // get writable database as we want to write data
         SQLiteDatabase db = this.getWritableDatabase();
         long id = 0;
@@ -85,7 +84,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return contact;
     }
 
-    public List<Contact> getAllNotes() {
+    public List<Contact> getAllContacts() {
         List<Contact> contactList = new ArrayList<>();
 
         // Select All Query
@@ -114,7 +113,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return contactList;
     }
 
-    public int getNotesCount() {
+    public int getContactsCount() {
         String countQuery = "SELECT  * FROM " + ContactTable.TABLE_NAME;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);
