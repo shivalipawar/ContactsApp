@@ -59,7 +59,6 @@ public class AddContact extends AppCompatActivity {
             createNote(contact);
             Toast.makeText(this,"Successfully added contact",Toast.LENGTH_SHORT).show();
             System.out.println("Saving to Db");
-            startActivity(new Intent(this, MainActivity.class));
             finish();
         }
     }
@@ -70,7 +69,7 @@ public class AddContact extends AppCompatActivity {
         Contact n = db.getContact(id,db.getReadableDatabase());
 
         if (n != null) {
-            contactList.add( n);
+            contactList.add(n);
             adapter.notifyDataSetChanged();
         }
     }

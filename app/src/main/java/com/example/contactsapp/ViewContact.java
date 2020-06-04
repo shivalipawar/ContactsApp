@@ -71,7 +71,6 @@ public class ViewContact extends AppCompatActivity {
             updateContact(contact,position);
             Toast.makeText(this,"Successfully updated contact",Toast.LENGTH_SHORT).show();
             System.out.println("Saving to Db");
-            startActivity(new Intent(this, MainActivity.class));
             finish();
         }
     }

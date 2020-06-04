@@ -33,7 +33,11 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
 
         recyclerView = findViewById(R.id.rvContacts);
         db = new DatabaseHelper(this);
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
         contactList = new ArrayList<>();
         contactList.addAll(db.getAllContacts(db.getWritableDatabase()));
 
