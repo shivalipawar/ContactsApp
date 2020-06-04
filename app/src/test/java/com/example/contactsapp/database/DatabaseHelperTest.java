@@ -32,7 +32,7 @@ public class DatabaseHelperTest {
     public void onCreate() {
         dbHelper.onCreate(db);
 
-        Mockito.verify(db, atLeastOnce()).execSQL(ContactTable.CREATE_TABLE);
+        Mockito.verify(db, atLeastOnce()).execSQL(ContactTable.CREATE_TABLE_QUERY);
     }
 
     @Test

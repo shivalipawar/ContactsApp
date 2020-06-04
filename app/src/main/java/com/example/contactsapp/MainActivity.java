@@ -13,7 +13,6 @@ import android.view.View;
 
 import com.example.contactsapp.database.DatabaseHelper;
 import com.example.contactsapp.models.Contact;
-import com.example.contactsapp.utils.MyDividerItemDecoration;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -40,11 +39,9 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         super.onStart();
         contactList = new ArrayList<>();
         contactList.addAll(db.getAllContacts(db.getWritableDatabase()));
-
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new MyRecyclerViewAdapter(this, contactList);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.addItemDecoration(new MyDividerItemDecoration(this, LinearLayoutManager.VERTICAL, 16));
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
     }
@@ -56,23 +53,21 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
 
     @Override
     public void onClick(View v) {
-        if(v instanceof FloatingActionButton)
-        {
+        if (v instanceof FloatingActionButton) {
             FloatingActionButton fab = (FloatingActionButton) v;
-            if(fab.getId() == R.id.addContactButton){
+            if (fab.getId() == R.id.addContactButton) {
                 goToAddContactActivity();
             }
         }
     }
 
     private void goToAddContactActivity() {
-        Intent intent = new Intent(this, AddContact.class);
+        Intent intent = new Intent(this, AddContactActivity.class);
         startActivity(intent);
     }
 
     private void showActionsDialog(final int position) {
         CharSequence items[] = new CharSequence[]{"Edit", "Delete"};
-
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Choose option");
         builder.setItems(items, new DialogInterface.OnClickListener() {
@@ -81,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
                 if (which == 0) {
                     gotToViewContactActivity(position);
                 } else {
-                    deleteNote(position);
+                    deleteContact(position);
                 }
             }
         });
@@ -89,14 +84,13 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
     }
 
     private void gotToViewContactActivity(int position) {
-        Intent intent = new Intent(this, ViewContact.class);
-        intent.putExtra("position",position);
+        Intent intent = new Intent(this, EditContactActivity.class);
+        intent.putExtra("position", position);
         startActivity(intent);
     }
 
-    private void deleteNote(int position) {
-        db.deleteContact(contactList.get(position),db.getWritableDatabase());
-
+    private void deleteContact(int position) {
+        db.deleteContact(contactList.get(position), db.getWritableDatabase());
         contactList.remove(position);
         adapter.notifyItemRemoved(position);
     }
