@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.contactsapp.models.Contact;
 
 import static com.example.contactsapp.MainActivity.adapter;
-import static com.example.contactsapp.MainActivity.contactList;
 import static com.example.contactsapp.MainActivity.db;
 
 public class AddContactActivity extends AppCompatActivity {
@@ -55,14 +54,14 @@ public class AddContactActivity extends AppCompatActivity {
             Toast.makeText(this, "Please enter name and phone number", Toast.LENGTH_LONG).show();
         } else {
             Contact contact = new Contact(0, name.getText().toString(), phoneNumber.getText().toString());
-            createNote(contact);
+            createContact(contact);
             Toast.makeText(this, "Successfully added contact", Toast.LENGTH_SHORT).show();
             System.out.println("Saving to Db");
             finish();
         }
     }
 
-    private void createNote(Contact contact) {
+    private void createContact(Contact contact) {
         long id = db.insertContact(contact, db.getWritableDatabase());
 
         Contact n = db.getContact(id, db.getReadableDatabase());

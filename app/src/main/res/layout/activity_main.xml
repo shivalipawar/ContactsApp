@@ -29,5 +29,19 @@
             android:layout_margin="16dp"
             android:onClick="onClick"
             app:srcCompat="@android:drawable/ic_input_add" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/importContactButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="16dp"
+            android:layout_toStartOf="@+id/addContactButton"
+            android:layout_toLeftOf="@+id/addContactButton"
+            android:clickable="true"
+            android:onClick="onClick"
+            app:layout_constraintEnd_toStartOf="@id/addContactButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@android:drawable/stat_sys_download_done" />
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
