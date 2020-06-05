@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
     }
 
     private void gotToViewContactActivity(int position) {
-        Intent intent = new Intent(this, EditContactActivity.class);
+        Intent intent = new Intent(this, AddContactActivity.class);
         intent.putExtra("position", position);
         startActivity(intent);
     }

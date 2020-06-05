@@ -33,8 +33,8 @@
             android:layout_marginBottom="16dp"
             android:clickable="true"
             android:onClick="onClick"
-            app:backgroundTint="#ffffff"
-            app:srcCompat="@android:drawable/ic_input_add" />
+            app:backgroundTint="@color/colorPrimaryDark"
+            app:srcCompat="@drawable/ic_add_white" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/importContactButton"
