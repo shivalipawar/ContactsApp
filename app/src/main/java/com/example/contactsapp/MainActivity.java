@@ -1,13 +1,5 @@
 package com.example.contactsapp;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.SearchManager;
@@ -18,12 +10,20 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.provider.ContactsContract;
 import android.widget.SearchView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.contactsapp.database.DatabaseHelper;
 import com.example.contactsapp.models.Contact;
@@ -67,7 +67,14 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
 
     @Override
     public void onItemClick(View view, int position) {
-        showActionsDialog(position);
+        gotoViewContactActivity(position);
+//        showActionsDialog(position);
+    }
+
+    private void gotoViewContactActivity(int position) {
+        Intent intent = new Intent(this, ViewContact.class);
+        intent.putExtra("position", position);
+        startActivity(intent);
     }
 
 
@@ -112,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (which == 0) {
-                    gotToViewContactActivity(position);
+                    gotToEditContactActivity(position);
                 } else {
                     deleteContact(position);
                 }
@@ -121,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         builder.show();
     }
 
-    private void gotToViewContactActivity(int position) {
+    private void gotToEditContactActivity(int position) {
         Intent intent = new Intent(this, AddContactActivity.class);
         intent.putExtra("position", position);
         startActivity(intent);
