@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -17,8 +19,11 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.provider.ContactsContract;
+import android.widget.SearchView;
 
 import com.example.contactsapp.database.DatabaseHelper;
 import com.example.contactsapp.models.Contact;
@@ -34,7 +39,9 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
     public static MyRecyclerViewAdapter adapter;
     public static DatabaseHelper db;
     public static List<Contact> contactList = new ArrayList<>();
+    public static List<Contact> filteredContactList = new ArrayList<>();
     private RecyclerView recyclerView;
+    private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         super.onStart();
         contactList = new ArrayList<>();
         contactList.addAll(db.getAllContacts(db.getWritableDatabase()));
+        filteredContactList = new ArrayList<>(contactList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new MyRecyclerViewAdapter(this, contactList);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -120,8 +128,10 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
     }
 
     private void deleteContact(int position) {
-        db.deleteContact(contactList.get(position), db.getWritableDatabase());
-        contactList.remove(position);
+        Contact contactToBeDeleted = filteredContactList.get(position);
+        db.deleteContact(contactToBeDeleted, db.getWritableDatabase());
+        filteredContactList.remove(contactToBeDeleted);
+        contactList.remove(contactToBeDeleted);
         adapter.notifyItemRemoved(position);
     }
 
@@ -160,8 +170,8 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
                             while (numbers.moveToNext()) {
                                 num = numbers.getString(numbers.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                                 name = numbers.getString(numbers.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-                                Log.i(">>number", "onActivityResult: " + num + "of person named : "+name);
-                                Contact contact = new Contact(0,name,num);
+                                Log.i(">>number", "onActivityResult: " + num + "of person named : " + name);
+                                Contact contact = new Contact(0, name, num);
                                 createContact(contact);
                             }
                         }
@@ -183,4 +193,48 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_activity, menu);
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView = (SearchView) menu.findItem(R.id.action_search)
+                .getActionView();
+        searchView.setQueryHint("Search by name or number");
+        searchView.setSearchableInfo(searchManager
+                .getSearchableInfo(getComponentName()));
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                adapter.getFilter().filter(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+                adapter.getFilter().filter(query);
+                return false;
+            }
+        });
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (R.id.action_search == id) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!searchView.isIconified()) {
+            searchView.setIconified(true);
+            return;
+        }
+        super.onBackPressed();
+    }
 }

@@ -1,26 +1,29 @@
 package com.example.contactsapp;
 
 import android.content.Context;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.contactsapp.models.Contact;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder> {
+public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder> implements Filterable {
 
-    private List<Contact> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
     MyRecyclerViewAdapter(Context context, List<Contact> data) {
         this.mInflater = LayoutInflater.from(context);
-        this.mData = data;
     }
 
     @Override
@@ -31,14 +34,38 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Contact contact = mData.get(position);
+        Contact contact = MainActivity.filteredContactList.get(position);
         holder.contactName.setText(contact.getName());
         holder.contactNumber.setText(contact.getNumber());
     }
 
     @Override
     public int getItemCount() {
-        return mData.size();
+        return MainActivity.filteredContactList.size();
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter(){
+
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                final String filterQuery = constraint.toString();
+                List<Contact> filteredResults = MainActivity.contactList.stream()
+                        .filter(contact -> contact.getName().toLowerCase().contains(filterQuery.toLowerCase()) || contact.getNumber().contains(filterQuery))
+                        .collect(Collectors.toList());
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = filteredResults;
+                MainActivity.filteredContactList = filteredResults;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                notifyDataSetChanged();
+            }
+        };
     }
 
 
@@ -57,10 +84,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
             if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
         }
 
-    }
-
-    String getItem(int id) {
-        return mData.get(id).getName();
     }
 
     void setClickListener(ItemClickListener itemClickListener) {
