@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
                                 num = numbers.getString(numbers.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                                 name = numbers.getString(numbers.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
                                 Log.i(">>number", "onActivityResult: " + num + "of person named : " + name);
-                                Contact contact = new Contact(0, name, num);
+                                Contact contact = new Contact(0, name, num, "");
                                 createContact(contact);
                             }
                         }

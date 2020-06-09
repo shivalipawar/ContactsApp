@@ -37,6 +37,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(COLUMN_NAME, contact.getName());
         values.put(COLUMN_PHONE, contact.getNumber());
+        values.put(COLUMN_EMAIL, contact.getEmail());
 
         return db.update(TABLE_NAME, values, COLUMN_ID + " = ?",
                 new String[]{String.valueOf(contact.getId())});
@@ -54,6 +55,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(COLUMN_NAME, contact.getName());
         values.put(COLUMN_PHONE, contact.getNumber());
+        values.put(COLUMN_EMAIL, contact.getEmail());
 
         if (selectQueryForId(db, id).getCount() == 1) {
             return updateContact(contact, db);
@@ -88,7 +90,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private Cursor selectQueryForId(SQLiteDatabase db, long id) {
         return db.query(TABLE_NAME,
-                new String[]{COLUMN_ID, COLUMN_NAME, COLUMN_PHONE},
+                new String[]{COLUMN_ID, COLUMN_NAME, COLUMN_PHONE,COLUMN_EMAIL},
                 COLUMN_ID + "=?",
                 new String[]{String.valueOf(id)}, null, null, null, null);
     }
@@ -97,6 +99,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return new Contact(
                 cursor.getInt(cursor.getColumnIndex(COLUMN_ID)),
                 cursor.getString(cursor.getColumnIndex(COLUMN_NAME)),
-                cursor.getString(cursor.getColumnIndex(COLUMN_PHONE)));
+                cursor.getString(cursor.getColumnIndex(COLUMN_PHONE)),
+                cursor.getString(cursor.getColumnIndex(COLUMN_EMAIL))
+                );
     }
 }

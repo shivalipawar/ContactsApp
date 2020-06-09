@@ -17,7 +17,7 @@ import static com.example.contactsapp.MainActivity.db;
 import static com.example.contactsapp.MainActivity.filteredContactList;
 
 public class AddContactActivity extends AppCompatActivity {
-    EditText name, phoneNumber;
+    EditText name, phoneNumber,email;
     int position = -1;
 
     @Override
@@ -30,12 +30,17 @@ public class AddContactActivity extends AppCompatActivity {
         }
         Intent intent = getIntent();
         position = intent.getIntExtra("position", -1);
-        name = findViewById(R.id.name);
-        phoneNumber = findViewById(R.id.phoneNumber);
+        initializeControls();
 
         if (position > -1) {
             updateWithDefaultValues(position);
         }
+    }
+
+    private void initializeControls() {
+        name = findViewById(R.id.name);
+        phoneNumber = findViewById(R.id.phoneNumber);
+        email = findViewById(R.id.email);
     }
 
     @Override
@@ -62,19 +67,20 @@ public class AddContactActivity extends AppCompatActivity {
         Contact n = filteredContactList.get(position);
         name.setText(n.getName());
         phoneNumber.setText(n.getNumber());
+        email.setText(n.getEmail());
     }
 
     private void saveToDb() {
         if (name.getText().toString().isEmpty() || phoneNumber.getText().toString().isEmpty()) {
             Toast.makeText(this, "Please enter name and phone number", Toast.LENGTH_LONG).show();
         } else if (position == -1) {
-            Contact contact = new Contact(0, name.getText().toString(), phoneNumber.getText().toString());
+            Contact contact = new Contact(0, name.getText().toString(), phoneNumber.getText().toString(),email.getText().toString());
             createContact(contact);
             Toast.makeText(this, "Successfully added contact", Toast.LENGTH_SHORT).show();
             System.out.println("Saving to Db");
             finish();
         } else if (position > -1) {
-            updateContact(name.getText().toString(), phoneNumber.getText().toString(), position);
+            updateContact(name.getText().toString(), phoneNumber.getText().toString(), email.getText().toString(), position);
             Toast.makeText(this, "Successfully updated contact", Toast.LENGTH_SHORT).show();
             System.out.println("Saving to Db");
             //Go to root of stack
@@ -85,10 +91,11 @@ public class AddContactActivity extends AppCompatActivity {
         }
     }
 
-    private void updateContact(String name, String phoneNumber, int position) {
+    private void updateContact(String name, String phoneNumber,String email, int position) {
         Contact n = filteredContactList.get(position);
         n.setName(name);
         n.setNumber(phoneNumber);
+        n.setEmail(email);
         db.updateContact(n, db.getWritableDatabase());
         adapter.notifyItemChanged(position);
     }

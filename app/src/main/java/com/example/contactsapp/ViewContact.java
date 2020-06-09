@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,7 +27,7 @@ import static com.example.contactsapp.MainActivity.filteredContactList;
 
 public class ViewContact extends AppCompatActivity implements View.OnClickListener {
 
-    TextView name, phoneNumber;
+    TextView name, phoneNumber,email;
     int position = -1;
     ImageButton btnCall, btnText, btnEmail;
 
@@ -43,15 +42,20 @@ public class ViewContact extends AppCompatActivity implements View.OnClickListen
 
         Intent intent = getIntent();
         position = intent.getIntExtra("position", -1);
-        name = findViewById(R.id.name);
-        phoneNumber = findViewById(R.id.phoneNumber);
-        btnCall = findViewById(R.id.btnCall);
-        btnText = findViewById(R.id.btnText);
-        btnEmail = findViewById(R.id.btnEmail);
+        initializeControls();
 
         if (position > -1) {
             updateWithDefaultValues(position);
         }
+    }
+
+    private void initializeControls() {
+        name = findViewById(R.id.name);
+        phoneNumber = findViewById(R.id.phoneNumber);
+        email = findViewById(R.id.email);
+        btnCall = findViewById(R.id.btnCall);
+        btnText = findViewById(R.id.btnText);
+        btnEmail = findViewById(R.id.btnEmail);
     }
 
     @Override
@@ -77,6 +81,7 @@ public class ViewContact extends AppCompatActivity implements View.OnClickListen
         Contact n = filteredContactList.get(position);
         name.setText(n.getName());
         phoneNumber.setText(n.getNumber());
+        email.setText(n.getEmail());
     }
 
     @Override
@@ -101,7 +106,7 @@ public class ViewContact extends AppCompatActivity implements View.OnClickListen
     @SuppressLint("LongLogTag")
     private void sendEmail() {
         Log.i("Send email", "");
-        Intent emailIntent = new Intent(Intent.ACTION_SENDTO,Uri.parse("mailto:"));
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO,Uri.parse("mailto:"+email.getText()));
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Your subject");
         emailIntent.putExtra(Intent.EXTRA_TEXT, "Email message goes here");
 
@@ -146,7 +151,7 @@ public class ViewContact extends AppCompatActivity implements View.OnClickListen
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (which == 0) {
-                    gotToEditContactActivity(position);
+                    goToEditContactActivity(position);
                 } else {
                     deleteContact(position);
                 }
@@ -155,7 +160,7 @@ public class ViewContact extends AppCompatActivity implements View.OnClickListen
         builder.show();
     }
 
-    private void gotToEditContactActivity(int position) {
+    private void goToEditContactActivity(int position) {
         Intent intent = new Intent(this, AddContactActivity.class);
         intent.putExtra("position", position);
         startActivity(intent);
