@@ -68,7 +68,6 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
     @Override
     public void onItemClick(View view, int position) {
         gotoViewContactActivity(position);
-//        showActionsDialog(position);
     }
 
     private void gotoViewContactActivity(int position) {
@@ -109,37 +108,6 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
     private void goToAddContactActivity() {
         Intent intent = new Intent(this, AddContactActivity.class);
         startActivity(intent);
-    }
-
-    private void showActionsDialog(final int position) {
-        CharSequence items[] = new CharSequence[]{"Edit", "Delete"};
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Choose option");
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (which == 0) {
-                    gotToEditContactActivity(position);
-                } else {
-                    deleteContact(position);
-                }
-            }
-        });
-        builder.show();
-    }
-
-    private void gotToEditContactActivity(int position) {
-        Intent intent = new Intent(this, AddContactActivity.class);
-        intent.putExtra("position", position);
-        startActivity(intent);
-    }
-
-    private void deleteContact(int position) {
-        Contact contactToBeDeleted = filteredContactList.get(position);
-        db.deleteContact(contactToBeDeleted, db.getWritableDatabase());
-        filteredContactList.remove(contactToBeDeleted);
-        contactList.remove(contactToBeDeleted);
-        adapter.notifyItemRemoved(position);
     }
 
     @Override

@@ -77,7 +77,11 @@ public class AddContactActivity extends AppCompatActivity {
             updateContact(name.getText().toString(), phoneNumber.getText().toString(), position);
             Toast.makeText(this, "Successfully updated contact", Toast.LENGTH_SHORT).show();
             System.out.println("Saving to Db");
+            //Go to root of stack
+            Intent mainIntent = new Intent(this,MainActivity.class);
             finish();
+            mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK |Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(mainIntent);
         }
     }
 

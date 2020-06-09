@@ -1,15 +1,19 @@
 package com.example.contactsapp;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
@@ -17,12 +21,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.contactsapp.models.Contact;
 
+import static com.example.contactsapp.MainActivity.adapter;
+import static com.example.contactsapp.MainActivity.contactList;
+import static com.example.contactsapp.MainActivity.db;
 import static com.example.contactsapp.MainActivity.filteredContactList;
 
 public class ViewContact extends AppCompatActivity implements View.OnClickListener {
 
-    private static final int PERMISSIONS_REQUEST_CALL_PHONE = 1;
-    EditText name, phoneNumber;
+    TextView name, phoneNumber;
     int position = -1;
     ImageButton btnCall, btnText, btnEmail;
 
@@ -49,11 +55,20 @@ public class ViewContact extends AppCompatActivity implements View.OnClickListen
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.view_contact, menu);
+        return  true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 return true;
+            case R.id.action_more :
+                showActionsDialog(position);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -121,5 +136,37 @@ public class ViewContact extends AppCompatActivity implements View.OnClickListen
     private boolean isTelephonyEnabled() {
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
         return telephonyManager != null && telephonyManager.getSimState() == TelephonyManager.SIM_STATE_READY;
+    }
+
+    private void showActionsDialog(final int position) {
+        CharSequence items[] = new CharSequence[]{"Edit", "Delete"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Choose option");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (which == 0) {
+                    gotToEditContactActivity(position);
+                } else {
+                    deleteContact(position);
+                }
+            }
+        });
+        builder.show();
+    }
+
+    private void gotToEditContactActivity(int position) {
+        Intent intent = new Intent(this, AddContactActivity.class);
+        intent.putExtra("position", position);
+        startActivity(intent);
+    }
+
+    private void deleteContact(int position) {
+        Contact contactToBeDeleted = filteredContactList.get(position);
+        db.deleteContact(contactToBeDeleted, db.getWritableDatabase());
+        filteredContactList.remove(contactToBeDeleted);
+        contactList.remove(contactToBeDeleted);
+        adapter.notifyItemRemoved(position);
+        finish();
     }
 }
