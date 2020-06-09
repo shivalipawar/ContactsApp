@@ -117,10 +117,13 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
             case PERMISSIONS_REQUEST_READ_CONTACTS: {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                } else {
                     Intent intent = new Intent(Intent.ACTION_PICK);
                     intent.setType(ContactsContract.Contacts.CONTENT_TYPE);
                     startActivityForResult(intent, SELECT_CONTACT);
+                }else{
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{Manifest.permission.READ_CONTACTS},
+                            PERMISSIONS_REQUEST_READ_CONTACTS);
                 }
                 break;
             }
